@@ -1,0 +1,64 @@
+
+sysctl -w vm.max_map_count=262144    
+
+
+export JAVA_HOME="/home/appian/java" && export PATH=$JAVA_HOME/bin:$PATH:
+
+
+
+
+cp ../k3.lic server/_bin/k/linux64/
+cp ../k4.lic data-server/engine/bin/q/l64/
+cp ../mariadb-java-client-2.7.3.jar tomcat/apache-tomcat/lib/
+
+
+
+
+
+
+
+nano repo/conf/tomcatResources.xml.dev   
+
+nano repo/conf/custom.properties.dev      
+
+
+./_admin/_scripts/configure/configure.sh 
+
+./services/bin/password.sh -p Appian@123
+
+
+./services/bin/start.sh -p Appian@123 -s all
+ 
+./services/bin/status.sh -p Appian@123
+   
+./services/bin/stop.sh -p Appian@123 -s all
+
+./data-server/bin/start.sh
+
+./data-server/bin/health.sh
+
+./data-server/bin/stop.sh
+
+./search-server/bin/start.sh
+
+./search-server/bin/stop.sh
+
+./tomcat/apache-tomcat/bin/start-appserver.sh
+
+tail -f logs/tomcat-stdOut.log
+
+./tomcat/apache-tomcat/bin/stop-appserver.sh
+
+
+
+./logs/data-server/k4_license.info                             ------------> license validity info
+./_admin/_scripts/licinfo.sh -- ./_admin/_scripts/licinfo.txt  ------------> license info
+./server/_bin/k/linux64/k                                      ------------> k3 licinfo test
+./data-server/engine/bin/q/l64/ ----- QHOME=.. ./q             ------------> k4 licinfo test
+
+
+
+
+
+free && sync && echo 3 > /proc/sys/vm/drop_caches && free -h
+
